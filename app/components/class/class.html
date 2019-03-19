@@ -1,0 +1,246 @@
+<h1>Classes Manager</h1>
+<div class="container-fluid" ng-controller="classController">
+    <div name="Tool">
+        <div class="row">
+            <div class="col-sm-2">
+                <select class="form-control" ng-options="grade.GradeId as grade.GradeName for grade in Grades"
+                    ng-model="search.Class.GradeId" ng-change="chooseGrade()">
+                    <option value="">Choose Grade</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" ng-model="search.Class.ClassName">
+                    <option value="">Choose Class</option>
+                    <option ng-repeat="class in Classes" value="{{class.ClassName}}">{{class.ClassName}}</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" ng-model="search.Student.StudentName" placeholder="Find by name">
+            </div>
+            <div class="col-sm-1">
+                <label for="cbxOlder">Older: </label>
+                <input id="cbxOlder" type="checkbox" value="older">
+            </div>
+            <div class="col-sm-5">
+                <div class="row">
+                    <div>
+                        <!-- Trigger the modal:[createClass] with a button -->
+                        <button class="btn btn-warning pull-right" data-toggle="modal" data-target="#createClass">Create
+                            class</button>
+
+                    </div>
+                    <div>
+                        <!-- Trigger the modal:[createStudent] with a button -->
+                        <button class="btn btn-danger pull-right" data-toggle="modal" data-target="#createStudent">Create
+                            Student</button>
+                    </div>
+                    <div>
+                        <!-- Trigger the modal:[changeClass] with a button -->
+                        <button class="btn btn-info pull-right" data-toggle="modal" data-target="#changeClass" ng-click="changeClassTrigger()">Change Class</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div name="data_table" class="row">
+        <div class="col-lg-12 col-md-12">
+            <div name="classTable">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <th>Choose</th>
+                        <th>Student Name</th>
+                        <th>Date Of Birth</th>
+                        <th>Gender</th>
+                        <th>Address</th>
+                        <th>Email</th>
+                        <th>Action </th>
+                    </thead>
+                    <tbody>
+                        <tr ng-switch="mode[$index]"
+                            dir-paginate="student in ClassStudents | filter: search | itemsPerPage: 20 track by $index">
+                            <td><input type="checkbox" ng-model="student.selected"></td>
+                            <td style="display: none;">{{student.ClassId}}</td>
+                            <td style="display: none;">{{student.Class.GradeId}}</td>
+
+                            <td>
+                                <input class="form-control" type="text" ng-switch-when="editor"
+                                    ng-model="student.Student.StudentName" />
+                                <p ng-switch-default>{{student.Student.StudentName}}</p>
+                            </td>
+                            <!-- <td>{{student.Student.StudentDoB}}</td> -->
+                            <td>
+                                <p ng-switch-default>{{student.Student.StudentDoB}}</p>
+                                <input ng-switch-when="editor" class="form-control" type="date"
+                                    ng-model="student.Student.StudentDoB" />
+                            </td>
+                            <td>
+                                <select class="form-control" ng-switch-when="editor"
+                                    ng-model="student.Student.StudentGender"
+                                    ng-options="(item?'Male':'Female') for item in [true, false]">
+
+                                </select>
+                                <p ng-switch-default>{{student.Student.StudentGender == true ? "Male" : "Fimale"}}</p>
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" ng-switch-when="editor"
+                                    ng-model="student.Student.StudentAddress" />
+                                <p ng-switch-default>{{student.Student.StudentAddress}}</p>
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" ng-switch-when="editor"
+                                    ng-model="student.Student.StudentEmail" />
+                                <p ng-switch-default>{{student.Student.StudentEmail}}</p>
+                            </td>
+                            <td>
+                                <div ng-switch-default>
+                                    <button class="btn btn-primary">Detail</button>
+                                    <button ng-click="updateEvent(student, $index)"
+                                        class="btn btn-primary">Update</button>
+                                    <button ng-click="deleteEvent(student)" class="btn btn-primary">Delete</button>
+                                </div>
+                                <div ng-switch-when="editor">
+                                    <button ng-click="saveUpdate(student, $index)" class="btn btn-primary">Save</button>
+                                    <button ng-click="cancelEvent($index)" class="btn btn-primary">Cancel</button>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <dir-pagination-controls max-size="20" direction-links="true" boundary-links="true">
+            </dir-pagination-controls>
+        </div>
+    </div>
+
+    <!-- Modal add class -->
+    <div id="createClass" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" ng-model="NewClass">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Create Class</h4>
+                </div>
+                <div class="modal-body">
+                    Class Name: <input type="text" class="form-control" ng-model="NewClass.ClassName">
+                    Class Year: <input type="date" class="form-control" ng-model="NewClass.ClassYear">
+
+                    Grade: <select class="form-control" ng-model="NewClass.GradeId"
+                        ng-options="grade.GradeId as grade.GradeName for grade in Grades">
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="createClass(NewClass)">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Modal add class -->
+    <div id="createStudent" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" ng-model="NewStudent">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Create Class</h4>
+                </div>
+                <div class="modal-body">
+                    Student Name: <input type="text" class="form-control" ng-model="NewStudent.StudentName">
+                    Student DoB: <input type="date" class="form-control" ng-model="NewStudent.StudentDoB">
+
+                    Student Gender: <select class="form-control" ng-model="NewStudent.StudentGender"
+                        ng-options="(item?'Male':'Female') for item in [true, false]">
+                    </select>
+                    Student Address: <input type="text" class="form-control" ng-model="NewStudent.StudentAddress">
+                    Student Email: <input type="text" class="form-control" ng-model="NewStudent.StudentEmail">
+                    <div class="row">
+                        <div class="col-md-6">
+                            Grade: <select class="form-control" ng-model="search.Class.GradeId"
+                                ng-options="grade.GradeId as grade.GradeName for grade in Grades"
+                                ng-change="chooseGrade()">
+                                <option value="">Choose Grade</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            Class: <select class="form-control" ng-model="NewStudent.ClassId">
+                                <option value="">Choose Class</option>
+                                <option ng-repeat="class in Classes" value="{{class.ClassId}}">{{class.ClassName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success"
+                        ng-click="createStudent(NewStudent, ClassId)">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal add class -->
+    <div id="changeClass" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" ng-model="ChangeClass">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Change To Class</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <table class="table">
+                            <thead>
+                                <th>Student Name</th>
+                                <th>Student Class</th>
+                                <th>Remove</th>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="lst in listStdTable track by $index">
+                                    <td>{{lst.Student.StudentName}}</td>
+                                    <td>{{lst.Class.ClassName}}</td>
+                                    <td><a href="" ng-click="deleteRowTableChangeClassModal($index)"><span class="glyphicon glyphicon-remove"></span></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            Grade: <select class="form-control" ng-model="search.Class.GradeId"
+                                ng-options="grade.GradeId as grade.GradeName for grade in Grades"
+                                ng-change="chooseGrade()">
+                                <option value="">Choose Grade</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            Class: <select class="form-control" ng-model="ChangeClass.ClassId">
+                                <option value="">Choose Class</option>
+                                <option ng-repeat="class in Classes" value="{{class.ClassId}}">{{class.ClassName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success"
+                        ng-click="changeClass(ChangeClass)">Change</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

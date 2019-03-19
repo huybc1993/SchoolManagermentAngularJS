@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/sandstone/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="assets/css/myStyle.css" />
+</head>
+
+<body ng-app="StudentManagerApp">
+    <div class="wrapper">
+        <header class="main-header" ng-include="'app/shared/header/header.html'"></header>
+    </div>
+    <div>
+        <div ui-view></div>
+    </div>
+
+    <script src="assets/libs/angular.min.js"></script>
+    <script src="assets/libs/angular-modal-service.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.22/angular-ui-router.js"></script>
+    <!-- <script data-require="ui-bootstrap@*" data-semver="2.5.0"
+        src="https://cdn.rawgit.com/angular-ui/bootstrap/gh-pages/ui-bootstrap-tpls-2.5.0.js"></script> -->
+    <script src="assets/libs/dirPagination.js"></script>
+
+    <script src="app/shared/header/header.module.js"></script>
+    <script src="app/components/class/class.module.js"></script>
+    <script src="app/app.module.js"></script>
+
+
+</body>
+
+</html>
